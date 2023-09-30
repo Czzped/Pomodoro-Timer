@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, FormEventHandler, useEffect, useState } from "react";
 
 export function App() {
   const [inputValue, setInputValue] = useState('')
@@ -19,17 +19,15 @@ export function App() {
 
   }, [secondsInRealTime])
 
-  function handleInputValueChange(ev: ChangeEvent<HTMLInputElement>) {
+  function handleInputValueChange(ev: FormEvent<HTMLInputElement>) {
     setInputValue(ev.currentTarget.value)
   }
 
-  function handleSubmit(ev: FormEvent<SubmitEvent>) {
+  function handleSubmit(ev: FormEvent<HTMLFormElement>) {
     ev.preventDefault()
 
     setSecondsInRealTime(+inputValue * 60)
     setMinutes(+inputValue)
-
-    console.log('test')
   }
 
   function isDecimalValidation(number: number) {
