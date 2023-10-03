@@ -31,8 +31,8 @@ export function App() {
     setInputValue(ev.currentTarget.value)
   }
 
-  function handleNumberInputValueChange(ev: FormEvent<Number>) {
-    setNumberInputValue(ev.currentTarget.valueOf)
+  function handleNumberInputValueChange(ev: FormEvent<HTMLInputElement>) {
+    setNumberInputValue(+ev.currentTarget.value)
   }
 
   function handleSubmit(ev: FormEvent<HTMLFormElement>) {
