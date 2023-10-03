@@ -1,6 +1,7 @@
 import { FormEvent, useEffect, useState } from "react";
 
 export function App() {
+  const [numberInputValue, setNumberInputValue] = useState(5)
   const [inputValue, setInputValue] = useState('')
 
   const [secondsInRealTime, setSecondsInRealTime] = useState(0)
@@ -30,6 +31,10 @@ export function App() {
     setInputValue(ev.currentTarget.value)
   }
 
+  function handleNumberInputValueChange(ev: FormEvent<Number>) {
+    setNumberInputValue(ev.currentTarget.valueOf)
+  }
+
   function handleSubmit(ev: FormEvent<HTMLFormElement>) {
     ev.preventDefault()
 
@@ -40,13 +45,20 @@ export function App() {
       setIsTimerOn(!isTimerOn)
       setMinutes(0)
       setSeconds(0)
+      setNumberInputValue(5)
+      setInputValue('')
+
+      console.log({
+        name: inputValue,
+        time: numberInputValue
+      })
 
       return
     }
     setIsTimerOn(!isTimerOn)
 
-    setSecondsInRealTime((+inputValue * 60) - 1)
-    setMinutes(+inputValue)
+    setSecondsInRealTime((numberInputValue * 60) - 1)
+    setMinutes(numberInputValue)
   }
 
   function isDecimalValidation(number: number) {
@@ -60,8 +72,12 @@ export function App() {
       <h1>Pomodoro Timer</h1>
       <hr />
       <form onSubmit={handleSubmit}>
-        <label htmlFor="input">Say the Minutes: </label>
-        <input type="number" min={1} max={60} id="input" value={inputValue} onChange={handleInputValueChange} />
+        <div>
+          <label htmlFor="inputText">I'm going to work in </label>
+          <input type="text" id="inputText" disabled={isTimerOn ? true : false} value={inputValue} onChange={handleInputValueChange} required />
+          <label htmlFor="numberInput">for</label>
+          <input type="number" min={1} max={60} id="numberInput" value={numberInputValue} onChange={handleNumberInputValueChange} disabled={isTimerOn ? true : false} />
+        </div>
         {
           isTimerOn ?
 
