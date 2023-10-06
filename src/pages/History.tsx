@@ -9,22 +9,28 @@ export function History() {
             <h2>My <span>History</span></h2>
 
             <table border={1}>
-                <tr>
-                    <th>Task</th>
-                    <th>Duration</th>
-                    <th>Created</th>
-                </tr>
-                {
-                    timerTasksList.map(({ id, taskName, taskMinutes, dateOfStart }) => {
-                        return (
-                            <tr key={id}>
-                                <td>{taskName}</td>
-                                <td>{taskMinutes}</td>
-                                <td>{moment(dateOfStart).fromNow()}</td>
-                            </tr>
-                        )
-                    })
-                }
+                <thead>
+                    <tr>
+                        <th>Task</th>
+                        <th>Duration</th>
+                        <th>Created</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {
+                        timerTasksList.map(({ id, taskName, taskMinutes, dateOfStart, status }) => {
+                            return (
+                                <tr key={id}>
+                                    <td>{taskName}</td>
+                                    <td>{taskMinutes}</td>
+                                    <td>{moment(dateOfStart).fromNow()}</td>
+                                    <td>{status}</td>
+                                </tr>
+                            )
+                        })
+                    }
+                </tbody>
             </table>
         </section >
     )

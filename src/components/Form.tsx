@@ -27,6 +27,11 @@ export function Form() {
         }
         if (isTimerOn && secondsInRealTime < 0) {
             interruptTimer()
+
+            const newTimerTask = new TimerTask(nameOfTheTask, minutesOfTheTask, new Date(), 'completed')
+
+            timerTasksList.push(newTimerTask)
+            localStorage.setItem('timer-tasks-list', JSON.stringify(timerTasksList))
         }
     }, [secondsInRealTime])
 
@@ -41,29 +46,29 @@ export function Form() {
     function interruptTimer() {
         clearTimeout(timeOutId)
 
-        const newTimerTask = new TimerTask(nameOfTheTask, minutesOfTheTask, new Date())
-
+        setIsTimerOn(false)
         setSecondsInRealTime(0)
-        setIsTimerOn(!isTimerOn)
         setMinutes(0)
         setSeconds(0)
         setMinutesOfTheTask(5)
         setNameOfTheTask('')
-
-        timerTasksList.push(newTimerTask)
-        localStorage.setItem('timer-tasks-list', JSON.stringify(timerTasksList))
     }
 
     function handleSubmit(ev: FormEvent<HTMLFormElement>) {
         ev.preventDefault()
 
         if (isTimerOn) {
+            const newTimerTask = new TimerTask(nameOfTheTask, minutesOfTheTask, new Date(), 'interrupted')
+
+            timerTasksList.push(newTimerTask)
+            localStorage.setItem('timer-tasks-list', JSON.stringify(timerTasksList))
+
             return interruptTimer()
         }
 
         setIsTimerOn(!isTimerOn)
 
-        setSecondsInRealTime((minutesOfTheTask * 60) - 1)
+        setSecondsInRealTime(5) //(minutesOfTheTask * 60) - 1
         setMinutes(minutesOfTheTask)
     }
 
@@ -93,6 +98,12 @@ export function Form() {
                         :
                         <button disabled={nameOfTheTask[0] ? false : true}>start</button>
                 }
+
+                <h2>{isTimerOn ?
+                    <span>Ta on</span>
+                    :
+                    <span>Ta false</span>
+                }</h2>
             </form>
         </>
     )
