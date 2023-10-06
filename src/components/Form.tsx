@@ -1,8 +1,11 @@
 import { FormEvent, useEffect, useState } from "react";
+import { TimerTask } from "../entities/TimerTask";
 
 export function Form() {
-    const [numberInputValue, setNumberInputValue] = useState(5)
-    const [inputValue, setInputValue] = useState('')
+    const timerTasksList: TimerTask[] = JSON.parse(localStorage.getItem('timer-tasks-list') ?? '[]')
+
+    const [minutesOfTheTask, setMinutesOfTheTask] = useState(5)
+    const [nameOfTheTask, setNameOfTheTask] = useState('')
 
     const [secondsInRealTime, setSecondsInRealTime] = useState(0)
 
@@ -22,43 +25,46 @@ export function Form() {
                 setSecondsInRealTime(secondsInRealTime => secondsInRealTime - 1)
             }, 1000)
         }
-        if (secondsInRealTime < 0) {
-            setIsTimerOn(false)
+        if (isTimerOn && secondsInRealTime < 0) {
+            interruptTimer()
         }
     }, [secondsInRealTime])
 
     function handleInputValueChange(ev: FormEvent<HTMLInputElement>) {
-        setInputValue(ev.currentTarget.value)
+        setNameOfTheTask(ev.currentTarget.value)
     }
 
     function handleNumberInputValueChange(ev: FormEvent<HTMLInputElement>) {
-        setNumberInputValue(+ev.currentTarget.value)
+        setMinutesOfTheTask(+ev.currentTarget.value)
+    }
+
+    function interruptTimer() {
+        clearTimeout(timeOutId)
+
+        const newTimerTask = new TimerTask(nameOfTheTask, minutesOfTheTask, new Date())
+
+        setSecondsInRealTime(0)
+        setIsTimerOn(!isTimerOn)
+        setMinutes(0)
+        setSeconds(0)
+        setMinutesOfTheTask(5)
+        setNameOfTheTask('')
+
+        timerTasksList.push(newTimerTask)
+        localStorage.setItem('timer-tasks-list', JSON.stringify(timerTasksList))
     }
 
     function handleSubmit(ev: FormEvent<HTMLFormElement>) {
         ev.preventDefault()
 
         if (isTimerOn) {
-            clearTimeout(timeOutId)
-
-            setSecondsInRealTime(0)
-            setIsTimerOn(!isTimerOn)
-            setMinutes(0)
-            setSeconds(0)
-            setNumberInputValue(5)
-            setInputValue('')
-
-            console.log({
-                name: inputValue,
-                time: numberInputValue
-            })
-
-            return
+            return interruptTimer()
         }
+
         setIsTimerOn(!isTimerOn)
 
-        setSecondsInRealTime((numberInputValue * 60) - 1)
-        setMinutes(numberInputValue)
+        setSecondsInRealTime((minutesOfTheTask * 60) - 1)
+        setMinutes(minutesOfTheTask)
     }
 
     function isDecimalValidation(number: number) {
@@ -72,9 +78,9 @@ export function Form() {
             <form onSubmit={handleSubmit}>
                 <div>
                     <label htmlFor="inputText">I'm going to work in </label>
-                    <input type="text" id="inputText" disabled={isTimerOn ? true : false} value={inputValue} onChange={handleInputValueChange} required />
+                    <input type="text" id="inputText" disabled={isTimerOn ? true : false} value={nameOfTheTask} onChange={handleInputValueChange} required />
                     <label htmlFor="numberInput">for</label>
-                    <input type="number" min={1} max={60} id="numberInput" value={numberInputValue} onChange={handleNumberInputValueChange} disabled={isTimerOn ? true : false} />
+                    <input type="number" min={1} max={60} id="numberInput" value={minutesOfTheTask} onChange={handleNumberInputValueChange} disabled={isTimerOn ? true : false} />
                 </div>
 
                 <h1>{isDecimalValidation(minutes)}{minutes} : {isDecimalValidation(seconds)}{seconds}</h1>
@@ -85,7 +91,7 @@ export function Form() {
                         <button>interrupt</button>
 
                         :
-                        <button disabled={inputValue[0] ? false : true}>start</button>
+                        <button disabled={nameOfTheTask[0] ? false : true}>start</button>
                 }
             </form>
         </>
