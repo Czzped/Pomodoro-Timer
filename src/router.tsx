@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import { RootLayout } from "./pages/RootLayout";
 import { Home } from "./pages/Home";
+import { History } from "./pages/History";
 
 const router = createBrowserRouter([
   {
@@ -9,11 +10,11 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Home />, // Aqui é o componente que eu desjo colocar
+        element: <Home />,
       },
       {
         path: "history",
-        element: <Home />, // Aqui é o componente que eu desjo colocar
+        element: <History />,
       }
     ],
   },
