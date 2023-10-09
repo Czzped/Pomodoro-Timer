@@ -1,14 +1,14 @@
 export class TimerTask {
-    taskName
-    taskMinutes
+    nameOfTheTask
+    minutesOfTheTask
     dateOfStart
     status
     id
 
-    constructor(taskName: string, taskMinutes: string | number, dateOfStart: string | Date, status: string) {
+    constructor(nameOfTheTask: string, minutesOfTheTask: string | number, dateOfStart: string | Date, status: string) {
         this.id = Math.random() * 10000000000000
-        this.taskName = taskName
-        this.taskMinutes = taskMinutes
+        this.nameOfTheTask = nameOfTheTask
+        this.minutesOfTheTask = minutesOfTheTask
         this.dateOfStart = dateOfStart
         this.status = status
     }

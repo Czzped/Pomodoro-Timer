@@ -19,11 +19,11 @@ export function History() {
                 </thead>
                 <tbody>
                     {
-                        timerTasksList.map(({ id, taskName, taskMinutes, dateOfStart, status }) => {
+                        timerTasksList.map(({ id, nameOfTheTask, minutesOfTheTask, dateOfStart, status }) => {
                             return (
                                 <tr key={id}>
-                                    <td>{taskName}</td>
-                                    <td>{taskMinutes}</td>
+                                    <td>{nameOfTheTask}</td>
+                                    <td>{minutesOfTheTask}</td>
                                     <td>{moment(dateOfStart).fromNow()}</td>
                                     <td>{status}</td>
                                 </tr>

@@ -2,38 +2,53 @@ import { FormEvent, useEffect, useState } from "react";
 import { TimerTask } from "../entities/TimerTask";
 
 export function Form() {
+    let timeOutId = 0
+    const timerCycleId = parseFloat(localStorage.getItem('timer-cycle-id') ?? '0')
+
     const timerTasksList: TimerTask[] = JSON.parse(localStorage.getItem('timer-tasks-list') ?? '[]')
+    const timerTaskOnCycle = timerTasksList.find((task) => task.id === timerCycleId)
+    const timerTaskToUpdateIndex = timerTasksList.indexOf(timerTaskOnCycle)
+
 
     const [minutesOfTheTask, setMinutesOfTheTask] = useState(5)
-    const [nameOfTheTask, setNameOfTheTask] = useState('')
+    const [nameOfTheTask, setNameOfTheTask] = useState(timerTaskOnCycle?.nameOfTheTask ?? '')
 
-    const [secondsInRealTime, setSecondsInRealTime] = useState(0)
+    const [secondsInRealTime, setSecondsInRealTime] = useState(Number(localStorage.getItem('storeged-seconds-in-real-time') ?? '0'))
 
-    const [seconds, setSeconds] = useState(0)
-    const [minutes, setMinutes] = useState(0)
+    const [isTimerOn, setIsTimerOn] = useState(secondsInRealTime > 0 ? true : false)
 
-    const [isTimerOn, setIsTimerOn] = useState(false)
-
-    let timeOutId = 0
+    const [minutes, setMinutes] = useState(isTimerOn ? Math.floor((secondsInRealTime - 1) / 60) : 0)
+    const [seconds, setSeconds] = useState(isTimerOn ? (secondsInRealTime - 1) % 60 : 0)
 
     useEffect(() => {
-        if (secondsInRealTime >= 0) {
+        if (isTimerOn && secondsInRealTime > 0) {
             timeOutId = setTimeout(() => {
-                setMinutes(Math.floor(secondsInRealTime / 60))
-                setSeconds(secondsInRealTime % 60)
-
                 setSecondsInRealTime(secondsInRealTime => secondsInRealTime - 1)
+
+                setMinutes(Math.floor((secondsInRealTime - 1) / 60))
+                setSeconds((secondsInRealTime - 1) % 60)
+
+                storageSeconds()
             }, 1000)
         }
-        if (isTimerOn && secondsInRealTime < 0) {
+        if (isTimerOn && secondsInRealTime <= 0) {
+            updateTask(timerCycleId, 'completed')
             interruptTimer()
-
-            const newTimerTask = new TimerTask(nameOfTheTask, minutesOfTheTask, new Date(), 'completed')
-
-            timerTasksList.push(newTimerTask)
-            localStorage.setItem('timer-tasks-list', JSON.stringify(timerTasksList))
+            storageSeconds()
         }
     }, [secondsInRealTime])
+
+    function storageSeconds(number?: number) {
+        localStorage.setItem('storeged-seconds-in-real-time', JSON.stringify(number ?? secondsInRealTime))
+    }
+
+    function updateTask(timerCycleId: number, newTaskStatus: string) {
+        const newTimerTask = new TimerTask(nameOfTheTask, minutesOfTheTask, new Date(), newTaskStatus)
+
+        timerTasksList[timerTaskToUpdateIndex] = newTimerTask
+
+        localStorage.setItem('timer-tasks-list', JSON.stringify(timerTasksList))
+    }
 
     function handleInputValueChange(ev: FormEvent<HTMLInputElement>) {
         setNameOfTheTask(ev.currentTarget.value)
@@ -44,32 +59,38 @@ export function Form() {
     }
 
     function interruptTimer() {
-        clearTimeout(timeOutId)
-
         setIsTimerOn(false)
         setSecondsInRealTime(0)
         setMinutes(0)
         setSeconds(0)
         setMinutesOfTheTask(5)
         setNameOfTheTask('')
+
+        storageSeconds(0)
+
+        clearTimeout(timeOutId)
     }
 
     function handleSubmit(ev: FormEvent<HTMLFormElement>) {
         ev.preventDefault()
 
         if (isTimerOn) {
-            const newTimerTask = new TimerTask(nameOfTheTask, minutesOfTheTask, new Date(), 'interrupted')
+            updateTask(timerCycleId, 'interrupted')
+            interruptTimer()
 
-            timerTasksList.push(newTimerTask)
-            localStorage.setItem('timer-tasks-list', JSON.stringify(timerTasksList))
-
-            return interruptTimer()
+            return
         }
 
         setIsTimerOn(!isTimerOn)
 
-        setSecondsInRealTime(5) //(minutesOfTheTask * 60) - 1
+        setSecondsInRealTime((minutesOfTheTask * 60) - 1)
         setMinutes(minutesOfTheTask)
+
+        const newTimerTask = new TimerTask(nameOfTheTask, minutesOfTheTask, new Date(), 'in progress')
+
+        timerTasksList.push(newTimerTask)
+        localStorage.setItem('timer-tasks-list', JSON.stringify(timerTasksList))
+        localStorage.setItem('timer-cycle-id', JSON.stringify(newTimerTask.id))
     }
 
     function isDecimalValidation(number: number) {
@@ -98,12 +119,6 @@ export function Form() {
                         :
                         <button disabled={nameOfTheTask[0] ? false : true}>start</button>
                 }
-
-                <h2>{isTimerOn ?
-                    <span>Ta on</span>
-                    :
-                    <span>Ta false</span>
-                }</h2>
             </form>
         </>
     )
