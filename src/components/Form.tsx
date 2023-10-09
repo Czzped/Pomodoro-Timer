@@ -21,17 +21,19 @@ export function Form() {
     const [seconds, setSeconds] = useState(isTimerOn ? (secondsInRealTime - 1) % 60 : 0)
 
     useEffect(() => {
-        if (isTimerOn && secondsInRealTime > 0) {
+        if (isTimerOn && secondsInRealTime >= 0) {
             timeOutId = setTimeout(() => {
                 setSecondsInRealTime(secondsInRealTime => secondsInRealTime - 1)
 
                 setMinutes(Math.floor((secondsInRealTime - 1) / 60))
-                setSeconds((secondsInRealTime - 1) % 60)
+                setSeconds((secondsInRealTime) % 60)
 
                 storageSeconds()
             }, 1000)
         }
-        if (isTimerOn && secondsInRealTime <= 0) {
+        if (isTimerOn && secondsInRealTime === -1) {
+            console.log('tes')
+
             updateTaskStatus('completed')
             interruptTimer()
             storageSeconds()
