@@ -13,22 +13,22 @@ export function Form() {
     const [minutesOfTheTask, setMinutesOfTheTask] = useState(5)
     const [nameOfTheTask, setNameOfTheTask] = useState(timerTaskOnCycle?.nameOfTheTask ?? '')
 
-    const [secondsInRealTime, setSecondsInRealTime] = useState(Number(localStorage.getItem('storeged-seconds-in-real-time') ?? '0'))
+    const [secondsInRealTime, setSecondsInRealTime] = useState(Number(localStorage.getItem('storeged-seconds-in-real-time') ?? '0') - 1)
 
     const [isTimerOn, setIsTimerOn] = useState(secondsInRealTime > 0 ? true : false)
 
-    const [minutes, setMinutes] = useState(isTimerOn ? Math.floor((secondsInRealTime - 1) / 60) : 0)
-    const [seconds, setSeconds] = useState(isTimerOn ? (secondsInRealTime - 1) % 60 : 0)
+    const [minutes, setMinutes] = useState(isTimerOn ? Math.floor((secondsInRealTime) / 60) : 0)
+    const [seconds, setSeconds] = useState(isTimerOn ? (secondsInRealTime) % 60 : 0)
 
     useEffect(() => {
         if (isTimerOn && secondsInRealTime >= 0) {
             timeOutId = setTimeout(() => {
+                storageSeconds()
+
                 setSecondsInRealTime(secondsInRealTime => secondsInRealTime - 1)
 
                 setMinutes(Math.floor((secondsInRealTime - 1) / 60))
                 setSeconds((secondsInRealTime) % 60)
-
-                storageSeconds()
             }, 1000)
         }
         if (isTimerOn && secondsInRealTime === -1) {
