@@ -6,7 +6,7 @@ export function Form() {
     const timerCycleId = parseFloat(localStorage.getItem('timer-cycle-id') ?? '0')
 
     const timerTasksList: TimerTask[] = JSON.parse(localStorage.getItem('timer-tasks-list') ?? '[]')
-    const timerTaskOnCycle = timerTasksList.find((task) => task.id === timerCycleId)
+    const timerTaskOnCycle = timerTasksList.find((task) => task.id === timerCycleId) as TimerTask
     const timerTaskToUpdateIndex = timerTasksList.indexOf(timerTaskOnCycle)
 
 
