@@ -32,7 +32,7 @@ export function Form() {
             }, 1000)
         }
         if (isTimerOn && secondsInRealTime <= 0) {
-            updateTask(timerCycleId, 'completed')
+            updateTaskStatus('completed')
             interruptTimer()
             storageSeconds()
         }
@@ -42,7 +42,7 @@ export function Form() {
         localStorage.setItem('storeged-seconds-in-real-time', JSON.stringify(number ?? secondsInRealTime))
     }
 
-    function updateTask(timerCycleId: number, newTaskStatus: string) {
+    function updateTaskStatus(newTaskStatus: string) {
         const newTimerTask = new TimerTask(nameOfTheTask, minutesOfTheTask, new Date(), newTaskStatus)
 
         timerTasksList[timerTaskToUpdateIndex] = newTimerTask
@@ -75,7 +75,7 @@ export function Form() {
         ev.preventDefault()
 
         if (isTimerOn) {
-            updateTask(timerCycleId, 'interrupted')
+            updateTaskStatus('interrupted')
             interruptTimer()
 
             return
