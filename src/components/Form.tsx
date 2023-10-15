@@ -5,6 +5,9 @@ export function Form() {
     let timeOutId = 0
     const timerCycleId = parseFloat(localStorage.getItem('timer-cycle-id') ?? '0')
 
+    const abledButtonClass = "h-12 cursor-pointer rounded text-bgSecondary font-bold bg-primary hover:opacity-80"
+    const unabledButtonClass = "h-12 cursor-not-allowed rounded text-bgSecondary font-bold bg-primary hover:opacity-80"
+
     const timerTasksList: TimerTask[] = JSON.parse(localStorage.getItem('timer-tasks-list') ?? '[]')
     const timerTaskOnCycle = timerTasksList.find((task) => task.id === timerCycleId) as TimerTask
     const timerTaskToUpdateIndex = timerTasksList.indexOf(timerTaskOnCycle)
@@ -103,25 +106,44 @@ export function Form() {
 
     return (
         <>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="inputText">I'm going to work in </label>
-                    <input type="text" id="inputText" disabled={isTimerOn ? true : false} value={nameOfTheTask} onChange={handleInputValueChange} required />
-                    <label htmlFor="numberInput">for</label>
-                    <input type="number" min={1} max={60} id="numberInput" value={minutesOfTheTask} onChange={handleNumberInputValueChange} disabled={isTimerOn ? true : false} />
+            <form onSubmit={handleSubmit}
+                className="flex flex-col itens-center text-center gap-20 h-full"
+            >
+                <div className="flex flex-wrap gap-4 text-center items-center w-full">
+                    <label htmlFor="inputText" className="text-2xl">I'm going to work in </label>
+                    <input type="text"
+                        id="inputText"
+                        className="max-w-[50vw] bg-transparent outline-none border-b-4 border-secondary text-2xl transition-all focus:border-primary"
+                        disabled={isTimerOn ? true : false} required
+                        value={nameOfTheTask} onChange={handleInputValueChange}
+                    />
+                    <label htmlFor="numberInput" className="text-2xl">for</label>
+                    <input type="number"
+                        id="numberInput"
+                        className="bg-transparent outline-none border-b-4 border-secondary text-2xl transition-all focus:border-primary"
+                        min={1} max={60}
+                        value={minutesOfTheTask} onChange={handleNumberInputValueChange}
+                        disabled={isTimerOn ? true : false} />
                 </div>
 
-                <h1>{isDecimalValidation(minutes)}{minutes} : {isDecimalValidation(seconds)}{seconds}</h1>
+                <h1 className="text-[60px] font-bold md:text-9xl">
+                    {isDecimalValidation(minutes)}{minutes} : {isDecimalValidation(seconds)}{seconds}
+                </h1>
 
-                {
-                    isTimerOn ?
+                <button
+                    disabled={nameOfTheTask[0] ? false : true}
+                    className={nameOfTheTask[0] ? abledButtonClass : unabledButtonClass}
+                >
 
-                        <button>interrupt</button>
+                    {
+                        isTimerOn ?
+                            'interrupt'
 
-                        :
-                        <button disabled={nameOfTheTask[0] ? false : true}>start</button>
-                }
-            </form>
+                            :
+                            'start'
+                    }
+                </button>
+            </form >
         </>
     )
 }

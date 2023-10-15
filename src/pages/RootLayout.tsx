@@ -6,7 +6,7 @@ export function RootLayout() {
     return (
         <div className="flex flex-col items-center justify-between h-screen p-4">
             <Header />
-            <main className="py-8 flex justify-center bg-bgSecondary w-[80vw] min-h-[50vh] rounded-lg lg:w-[50vw]">
+            <main className="py-12 px-8 flex items-center justify-center bg-bgSecondary w-[80vw] min-h-[65vh] rounded-lg lg:w-[50vw]">
                 <Outlet />
             </main>
             <Footer />
