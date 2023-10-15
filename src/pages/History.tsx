@@ -6,7 +6,7 @@ export function History() {
 
     return (
         <section className="flex bg-bgSecondary w-[75vw] rounded-lg lg: min-h-[70vh]">
-            <table className="flex flex-col h-full w-full rounded">
+            <table className="flex flex-col h-full min-w-full rounded text-xs sm:text-base">
                 <thead>
                     <tr className="grid grid-cols-4 rounded-t-lg border-4 p-4">
                         <th>Task</th>
