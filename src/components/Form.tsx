@@ -107,7 +107,7 @@ export function Form() {
     return (
         <>
             <form onSubmit={handleSubmit}
-                className="flex flex-col itens-center text-center gap-20 h-full"
+                className="flex flex-col itens-center text-center gap-10 h-full"
             >
                 <div className="flex flex-wrap gap-4 text-center items-center w-full">
                     <label htmlFor="inputText" className="text-2xl">I'm going to work in </label>
