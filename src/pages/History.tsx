@@ -5,23 +5,21 @@ export function History() {
     const timerTasksList: TimerTask[] = JSON.parse(localStorage.getItem('timer-tasks-list') ?? '[]')
 
     return (
-        <section>
-            <h2>My <span>History</span></h2>
-
-            <table border={1}>
+        <section className="flex bg-bgSecondary w-[75vw] rounded-lg lg: min-h-[70vh]">
+            <table className="flex flex-col h-full w-full rounded">
                 <thead>
-                    <tr>
+                    <tr className="grid grid-cols-4 rounded-t-lg border-4 p-4">
                         <th>Task</th>
                         <th>Duration</th>
                         <th>Created</th>
                         <th>Status</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody className="flex flex-col">
                     {
                         timerTasksList.map(({ id, nameOfTheTask, minutesOfTheTask, dateOfStart, status }) => {
                             return (
-                                <tr key={id}>
+                                <tr className="grid grid-cols-4 h-20 font-bold text-center  p-4" key={id}>
                                     <td>{nameOfTheTask}</td>
                                     <td>{minutesOfTheTask}</td>
                                     <td>{moment(dateOfStart).fromNow()}</td>
@@ -32,6 +30,6 @@ export function History() {
                     }
                 </tbody>
             </table>
-        </section >
+        </section>
     )
 }
