@@ -7,7 +7,7 @@ export function Header() {
                 <h1 className="text-4xl font-bold">pomodoro</h1>
                 <Navbar />
             </div>
-            <hr className=" w-[75vw] h-[0.4rem] bg-secondary border-none rounded-[0.125rem]" />
+            <hr className="w-[75vw] h-[0.4rem] bg-secondary border-none rounded-[0.125rem]" />
         </header >
     )
 }
