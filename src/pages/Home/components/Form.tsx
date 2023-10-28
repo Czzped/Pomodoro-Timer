@@ -1,5 +1,5 @@
 import { FormEvent, useEffect, useState } from "react";
-import { TimerTask } from "../entities/TimerTask";
+import { TimerTask } from "../../../classes/TimerTask";
 
 export function Form() {
     let timeOutId = 0

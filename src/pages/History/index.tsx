@@ -1,4 +1,4 @@
-import { TimerTask } from "../entities/TimerTask"
+import { TimerTask } from "../../classes/TimerTask"
 import moment from "moment"
 
 export function History() {
