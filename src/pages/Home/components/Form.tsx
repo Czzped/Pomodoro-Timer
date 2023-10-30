@@ -77,7 +77,7 @@ export function Form() {
             return
         }
 
-        setSecondsInRealTime(5)
+        setSecondsInRealTime(minutesOfTheTask * 60)
 
         const newTimerTask = new TimerTask(nameOfTheTask, minutesOfTheTask, new Date(), 'in progress')
 
