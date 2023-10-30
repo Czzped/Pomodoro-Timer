@@ -12,39 +12,33 @@ export function Form() {
     const timerTaskOnCycle = timerTasksList.find((task) => task.id === timerCycleId) as TimerTask
     const timerTaskToUpdateIndex = timerTasksList.indexOf(timerTaskOnCycle)
 
-
     const [minutesOfTheTask, setMinutesOfTheTask] = useState(5)
     const [nameOfTheTask, setNameOfTheTask] = useState(timerTaskOnCycle?.nameOfTheTask ?? '')
 
-    const [secondsInRealTime, setSecondsInRealTime] = useState(Number(localStorage.getItem('storeged-seconds-in-real-time') ?? '0') - 1)
+    const [secondsInRealTime, setSecondsInRealTime] = useState(Number(localStorage.getItem('storeged-seconds-in-real-time') ?? '0'))
 
-    const [isTimerOn, setIsTimerOn] = useState(secondsInRealTime > 0 ? true : false)
+    const isTimerOn = secondsInRealTime > 0 ? true : false
 
-    const [minutes, setMinutes] = useState(isTimerOn ? Math.floor((secondsInRealTime) / 60) : 0)
-    const [seconds, setSeconds] = useState(isTimerOn ? (secondsInRealTime) % 60 : 0)
+    const minutes = Math.floor((secondsInRealTime) / 60)
+    const seconds = (secondsInRealTime) % 60
 
     useEffect(() => {
-        if (isTimerOn && secondsInRealTime >= 0) {
+        if (secondsInRealTime > 0) {
             timeOutId = setTimeout(() => {
-                storageSeconds()
-
                 setSecondsInRealTime(secondsInRealTime => secondsInRealTime - 1)
 
-                setMinutes(Math.floor((secondsInRealTime - 1) / 60))
-                setSeconds((secondsInRealTime) % 60)
+                storageSeconds(secondsInRealTime)
             }, 1000)
         }
-        if (isTimerOn && secondsInRealTime === -1) {
-            console.log('tes')
-
+        if (secondsInRealTime === 0) {
             updateTaskStatus('completed')
             interruptTimer()
-            storageSeconds()
+            storageSeconds(0)
         }
     }, [secondsInRealTime])
 
-    function storageSeconds(number?: number) {
-        localStorage.setItem('storeged-seconds-in-real-time', JSON.stringify(number ?? secondsInRealTime))
+    function storageSeconds(seconds?: number) {
+        localStorage.setItem('storeged-seconds-in-real-time', JSON.stringify(seconds))
     }
 
     function updateTaskStatus(newTaskStatus: string) {
@@ -64,10 +58,7 @@ export function Form() {
     }
 
     function interruptTimer() {
-        setIsTimerOn(false)
         setSecondsInRealTime(0)
-        setMinutes(0)
-        setSeconds(0)
         setMinutesOfTheTask(5)
         setNameOfTheTask('')
 
@@ -86,22 +77,13 @@ export function Form() {
             return
         }
 
-        setIsTimerOn(!isTimerOn)
-
-        setSecondsInRealTime((minutesOfTheTask * 60) - 1)
-        setMinutes(minutesOfTheTask)
+        setSecondsInRealTime(5)
 
         const newTimerTask = new TimerTask(nameOfTheTask, minutesOfTheTask, new Date(), 'in progress')
 
         timerTasksList.push(newTimerTask)
         localStorage.setItem('timer-tasks-list', JSON.stringify(timerTasksList))
         localStorage.setItem('timer-cycle-id', JSON.stringify(newTimerTask.id))
-    }
-
-    function isDecimalValidation(number: number) {
-        if (number < 10) {
-            return ("0")
-        }
     }
 
     return (
@@ -127,7 +109,9 @@ export function Form() {
                 </div>
 
                 <h1 className="text-[60px] font-bold md:text-9xl">
-                    {isDecimalValidation(minutes)}{minutes} : {isDecimalValidation(seconds)}{seconds}
+                    {String(minutes).padStart(2, '0')}
+                    :
+                    {String(seconds).padStart(2, '0')}
                 </h1>
 
                 <button
@@ -138,7 +122,6 @@ export function Form() {
                     {
                         isTimerOn ?
                             'interrupt'
-
                             :
                             'start'
                     }
