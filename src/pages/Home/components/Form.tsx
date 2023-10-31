@@ -1,5 +1,6 @@
 import { FormEvent, useEffect, useState } from "react";
 import { TimerTask } from "../../../classes/TimerTask";
+import { Input } from "../../../components/Input";
 
 export function Form() {
     let timeOutId = 0
@@ -91,21 +92,28 @@ export function Form() {
             <form onSubmit={handleSubmit}
                 className="flex flex-col py-12 px-8 justify-center itens-center text-center gap-10 h-full"
             >
-                <div className="flex flex-wrap gap-4 text-center items-center w-full">
-                    <label htmlFor="inputText" className="text-2xl">I'm going to work in </label>
-                    <input type="text"
+                <div className="flex flex-wrap gap-4 justify-center items-center w-full">
+                    <Input
+                        label="I'm going to work in "
+                        labelHTMLFor="inputText"
+
+                        type="text"
                         id="inputText"
                         className="max-w-[50vw] bg-transparent outline-none border-b-4 border-secondary text-2xl transition-all focus:border-primary"
                         disabled={isTimerOn ? true : false} required
                         value={nameOfTheTask} onChange={handleInputValueChange}
                     />
-                    <label htmlFor="numberInput" className="text-2xl">for</label>
-                    <input type="number"
-                        id="numberInput"
+                    <Input
+                        label="for"
+                        labelHTMLFor="numberInput"
+
+                        type="number"
                         className="bg-transparent outline-none border-b-4 border-secondary text-2xl transition-all focus:border-primary"
                         min={1} max={60}
-                        value={minutesOfTheTask} onChange={handleNumberInputValueChange}
-                        disabled={isTimerOn ? true : false} />
+                        value={minutesOfTheTask}
+                        onChange={handleNumberInputValueChange}
+                        disabled={isTimerOn ? true : false}
+                    />
                 </div>
 
                 <h1 className="text-[60px] font-bold md:text-9xl">
