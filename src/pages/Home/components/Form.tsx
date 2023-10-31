@@ -6,9 +6,6 @@ export function Form() {
     let timeOutId = 0
     const timerCycleId = parseFloat(localStorage.getItem('timer-cycle-id') ?? '0')
 
-    const abledButtonClass = "h-12 cursor-pointer rounded text-bgSecondary font-bold bg-primary hover:opacity-80"
-    const unabledButtonClass = "h-12 cursor-not-allowed rounded text-bgSecondary font-bold bg-primary hover:opacity-80"
-
     const timerTasksList: TimerTask[] = JSON.parse(localStorage.getItem('timer-tasks-list') ?? '[]')
     const timerTaskOnCycle = timerTasksList.find((task) => task.id === timerCycleId) as TimerTask
     const timerTaskToUpdateIndex = timerTasksList.indexOf(timerTaskOnCycle)
@@ -122,18 +119,30 @@ export function Form() {
                     {String(seconds).padStart(2, '0')}
                 </h1>
 
-                <button
-                    disabled={nameOfTheTask[0] ? false : true}
-                    className={nameOfTheTask[0] ? abledButtonClass : unabledButtonClass}
-                >
-
-                    {
-                        isTimerOn ?
-                            'interrupt'
-                            :
-                            'start'
-                    }
-                </button>
+                {
+                    nameOfTheTask[0] ?
+                        <button
+                            className="h-12 cursor-pointer rounded text-bgSecondary font-bold bg-primary hover:opacity-80"
+                        >
+                            {
+                                isTimerOn ?
+                                    'interrupt'
+                                    :
+                                    'start'
+                            }
+                        </button>
+                        :
+                        <button
+                            className="h-12 cursor-not-allowed rounded text-bgSecondary font-bold bg-primary hover:opacity-80"
+                        >
+                            {
+                                isTimerOn ?
+                                    'interrupt'
+                                    :
+                                    'start'
+                            }
+                        </button>
+                }
             </form >
         </>
     )
